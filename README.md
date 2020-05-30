@@ -27,7 +27,8 @@ naming for testing.
 
 Example Input:
 
-  delivery01/
+           delivery01/
+  
              PROJECTNAME_SHOTNAME_TASKNAME.0001.dpx
              
              PROJECTNAME_SHOTNAME_TASKNAME.0002.dpx
