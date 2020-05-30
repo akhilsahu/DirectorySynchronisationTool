@@ -19,39 +19,41 @@ of the sequence images is consistent, and all frames will be present.
 Output:
 Using parsed information from the filename, reformat the image sequences into the provided delivery
 format.
+
 Examples:
+
 The following are examples only. You should provide your own input and output files with your own
 naming for testing.
+
 Example Input:
+
 delivery01/
-PROJECTNAME_SHOTNAME_TASKNAME.0001.dpx
-PROJECTNAME_SHOTNAME_TASKNAME.0002.dpx
-PROJECTNAME_SHOTNAME_TASKNAME.0003.dpx
-PROJECTNAME_SHOTNAME_TASKNAME.0001.exr
-PROJECTNAME_SHOTNAME_TASKNAME.0002.exr
-PROJECTNAME_SHOTNAME_TASKNAME.0003.exr
-PROJECTNAME_SHOTNAME_TASKNAME.0001.jpg
-PROJECTNAME_SHOTNAME_TASKNAME.0002.jpg
-PROJECTNAME_SHOTNAME_TASKNAME.0003.jpg
+          PROJECTNAME_SHOTNAME_TASKNAME.0001.dpx
+          PROJECTNAME_SHOTNAME_TASKNAME.0002.dpx
+          PROJECTNAME_SHOTNAME_TASKNAME.0003.dpx
+          PROJECTNAME_SHOTNAME_TASKNAME.0001.exr
+          PROJECTNAME_SHOTNAME_TASKNAME.0002.exr
+          PROJECTNAME_SHOTNAME_TASKNAME.0003.exr
+          PROJECTNAME_SHOTNAME_TASKNAME.0001.jpg
+          PROJECTNAME_SHOTNAME_TASKNAME.0002.jpg
+          PROJECTNAME_SHOTNAME_TASKNAME.0003.jpg
 Example Output:
 PROJECTNAME/
-DATE/
-PROJECTNAME_SHOTNAME/
-TASKNAME/
-EXR/
-
-DPX/
-
-JPG/
-PROJECTNAME_SHOTNAME_TASKNAME.0001.exr
-PROJECTNAME_SHOTNAME_TASKNAME.0002.exr
-PROJECTNAME_SHOTNAME_TASKNAME.0003.exr
-PROJECTNAME_SHOTNAME_TASKNAME.0001.dpx
-PROJECTNAME_SHOTNAME_TASKNAME.0002.dpx
-PROJECTNAME_SHOTNAME_TASKNAME.0003.dpx
-PROJECTNAME_SHOTNAME_TASKNAME.0001.jpg
-PROJECTNAME_SHOTNAME_TASKNAME.0002.jpg
-PROJECTNAME_SHOTNAME_TASKNAME.0003.jpg
+           DATE/
+              PROJECTNAME_SHOTNAME/
+                            TASKNAME/
+                                  EXR/
+                                        PROJECTNAME_SHOTNAME_TASKNAME.0001.exr
+                                        PROJECTNAME_SHOTNAME_TASKNAME.0002.exr
+                                        PROJECTNAME_SHOTNAME_TASKNAME.0003.exr
+                                   DPX/
+                                        PROJECTNAME_SHOTNAME_TASKNAME.0001.dpx
+                                        PROJECTNAME_SHOTNAME_TASKNAME.0002.dpx
+                                        PROJECTNAME_SHOTNAME_TASKNAME.0003.dpx
+                                   JPG/
+                                        PROJECTNAME_SHOTNAME_TASKNAME.0001.jpg
+                                        PROJECTNAME_SHOTNAME_TASKNAME.0002.jpg
+                                        PROJECTNAME_SHOTNAME_TASKNAME.0003.jpg
 
 
 Notes:
