@@ -28,14 +28,23 @@ naming for testing.
 Example Input:
 
 delivery01/
+
              PROJECTNAME_SHOTNAME_TASKNAME.0001.dpx
+             
              PROJECTNAME_SHOTNAME_TASKNAME.0002.dpx
+             
              PROJECTNAME_SHOTNAME_TASKNAME.0003.dpx
+             
              PROJECTNAME_SHOTNAME_TASKNAME.0001.exr
+             
              PROJECTNAME_SHOTNAME_TASKNAME.0002.exr
+             
              PROJECTNAME_SHOTNAME_TASKNAME.0003.exr
+             
              PROJECTNAME_SHOTNAME_TASKNAME.0001.jpg
+             
              PROJECTNAME_SHOTNAME_TASKNAME.0002.jpg
+             
              PROJECTNAME_SHOTNAME_TASKNAME.0003.jpg
 
 
