@@ -6,6 +6,7 @@ from PySide2.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox, \
     QGridLayout, QFileDialog, QTextEdit, QLineEdit, QSpacerItem, QSizePolicy, QProgressBar, \
     QLabel, QListView, QAbstractItemView, QTreeView
 import sys
+
 from FileSynchronizer import FileSynchronizer
 
 
@@ -33,6 +34,9 @@ class Window(QWidget):
         self.cancelButton.clicked.connect(self.cancel_copy)
 
     def createGridLayout(self):
+
+        """Create grid layout here"""
+
         gridLayout = QGridLayout()
         gridLayout.addWidget(self.sourceFilePath, 0, 0, 1, 1)
         gridLayout.addWidget(self.sourceBtn, 0, 1, 1, 1)
