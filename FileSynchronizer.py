@@ -1,5 +1,6 @@
 import json
 import os
+import queue
 import shutil
 import threading
 from datetime import datetime
@@ -25,10 +26,11 @@ class FileSynchronizer(QObject):
         self.source_size = 0
         self.calculateSourceSize()
 
+
     def sync(self):
         print("Reading source directories" + self.destination)
         if not self.check_exist(self.destination):
-            self.copy_status.emit(
+            self.eventEmit(
                 "<span style=\" font-size:8pt; font-weight:600; color:red;\" >" + "Invalid Destination Folder. Please check and verify" + "</span>")
             return
 
@@ -36,35 +38,27 @@ class FileSynchronizer(QObject):
             if self.check_exist(dir) and self.copy_flag:
                 files = [f for f in listdir(dir)]
                 print(files)
+
                 self.process_files(dir, files)
             else:
-                self.copy_status.emit("Skipping source path " + dir + " Does not Exist")
+                self.eventEmit("Skipping source path " + dir + " Does not Exist")
         self.generate_json_file()
 
     def process_files(self, base_path, files):
 
         for f in files:
-            self.copy_status.emit("Processing in " + base_path + " file : " + f)
+            self.eventEmit("Processing in " + base_path + " file : " + f)
 
             if self.validate_file(f):
                 split__ = f.split("_")
-                yyyymmddhhmm = self.date_from_file(base_path + "/" + f)
-                split_dot = split__[2].split(".")
-
-                destination_base_path = self.destination + split__[0] + "/"
-
-                destination_path = destination_base_path + yyyymmddhhmm + "/" + split__[0] + "_" + split__[
-                    1] + "/" + split_dot[0] + "/" + split_dot[2] + "/" + f
-                source_path = base_path + "/" + f
-
-                self.copy_status.emit("<span style=\" font-size:8pt; font-weight:600; color:blue;\" >"+"Copying " + base_path + " file : " + f + "  to " + destination_path+"</span>")
-
+                destination_path, source_path = self.generate_new_file_path(f, base_path)
                 self.copy_files(source_path, destination_path)
                 self.progress()
-                self.json_dict[split__[0]][yyyymmddhhmm][split__[0] + "_" + split__[
-                    1]][split_dot[0]][split_dot[2]].append(f)
+                # self.json_dict[split__[0]][yyyymmddhhmm][split__[0] + "_" + split__[
+                #     1]][split_dot[0]][split_dot[2]].append(f)
             else:
-                self.copy_status.emit("<span style=\" font-size:8pt; font-weight:600; color:red;\" >"+"invalid Name Format. Skipping in " + base_path + " file : " + f+"</span>")
+                self.eventEmit("<span style=\" font-size:8pt; font-weight:600; color:red;\" >"+"invalid Name Format. Skipping in " + base_path + " file : " + f+"</span>")
+
     def generate_json_file(self):
         with open('result.json', 'w') as fp:
             json.dump(self.json_dict, fp)
@@ -73,12 +67,31 @@ class FileSynchronizer(QObject):
             text = "<a href={}>{}</a>".format(url,url)
             self.json_file_link.emit("JSON MANIFEST FILE: "+ text)
 
+    def generate_new_file_path(self, f, base_path):
+        split__ = f.split("_")
+        yyyymmddhhmm = self.date_from_file(base_path + "/" + f)
+
+        split_dot = split__[2].split(".")
+
+        destination_base_path = self.destination + split__[0] + "/"
+
+        self.json_dict[split__[0]][yyyymmddhhmm][split__[0] + "_" + split__[
+            1]][split_dot[0]][split_dot[2]].append(f)
+
+        destination_path = destination_base_path + yyyymmddhhmm + "/" + split__[0] + "_" + split__[
+            1] + "/" + split_dot[0] + "/" + split_dot[2] + "/" + f
+        source_path = base_path + "/" + f
+        return destination_path, source_path
 
     def calculateSourceSize(self):
         for i in self.input_directory:
             self.source_size += (sum(
                 os.path.getsize(os.path.join(dirpath, filename)) for dirpath, dirnames, filenames in os.walk(i) for
                 filename in filenames))
+
+    def eventEmit(self, msg):
+        print(msg)
+        self.copy_status.emit(msg)
 
     def progress(self):
 
@@ -89,7 +102,7 @@ class FileSynchronizer(QObject):
             filename in filenames))
         progress_percent = (dst_size / src_size) * 100
 
-        self.copy_status.emit(str(round(progress_percent)) + "% complete")
+        self.eventEmit(str(round(progress_percent)) + "% complete")
         self.progress_bar.emit(round(progress_percent))
 
     @staticmethod
@@ -120,5 +133,5 @@ class FileSynchronizer(QObject):
         print("Clean up directories")
 
 #
-# fds = FileSynchronizer(["E:/test/source1"], "E:/test/destination")
-# fds.sync()
+fds = FileSynchronizer(["E:/test/source1"], "E:/test/destination")
+fds.sync()

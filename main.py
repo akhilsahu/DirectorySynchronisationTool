@@ -7,7 +7,8 @@ from PySide2.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox, \
     QLabel, QListView, QAbstractItemView, QTreeView
 import sys
 
-from FileSynchronizer import FileSynchronizer
+
+from directorysync.FileSyncProcess import FileSyncProcess
 
 
 class Window(QWidget):
@@ -20,7 +21,7 @@ class Window(QWidget):
         self.destinationFilePath, self.destinationBtn = self.createSourceSelect("destination")
         self.executeButton = QPushButton("Execute")
         self.cancelButton = QPushButton("Cancel")
-
+        self.clearLogButton = QPushButton("Clear Log", self)
         self.myQLabel = QLabel()
         self.progressbar = QProgressBar()
         self.progressbar.setMinimum(0)
@@ -32,7 +33,7 @@ class Window(QWidget):
         self.destination = ""
         self.executeButton.clicked.connect(self.execute)
         self.cancelButton.clicked.connect(self.cancel_copy)
-
+        self.clearLogButton.clicked.connect(self.clear_log)
     def createGridLayout(self):
 
         """Create grid layout here"""
@@ -46,11 +47,15 @@ class Window(QWidget):
         gridLayout.addWidget(self.cancelButton, 2, 1, 1, 1)
 
         gridLayout.addWidget(self.textEdit, 5, 0, 7, 2)
+        gridLayout.addWidget(self.clearLogButton, 12, 1)
         gridLayout.addWidget(self.progressbar, 14, 0, 1, 2)
         gridLayout.addWidget(self.myQLabel, 16, 0)
+
+
         vspacer = QSpacerItem(
             QSizePolicy.Minimum, QSizePolicy.Expanding)
         gridLayout.addItem(vspacer, 0, 0, Qt.AlignTop)
+
 
         self.setLayout(gridLayout)
 
@@ -68,7 +73,9 @@ class Window(QWidget):
     def execute(self):
         if len(self.source) > 0 and len(self.destination) > 0:
             self.executeButton.setEnabled(False)
-            self.fds = FileSynchronizer(self.source, self.destination)
+            #self.fds = FileSynchronizer(self.source, self.destination)
+            #self.fds = FileSyncThreaded(self.source, self.destination)
+            self.fds = FileSyncProcess(self.source, self.destination)
             self.fds.copy_status.connect(self.copy_status)
             self.fds.progress_bar.connect(self.progress_bar)
             self.fds.json_file_link.connect(self.json_file_link)
@@ -93,7 +100,14 @@ class Window(QWidget):
         print(status)
 
     def cancel_copy(self):
-        self.fds.copy_flag = False
+        self.fds.kill_process()  # File Sync Process
+        self.fds.kill_thread()  #kill thread multiple
+        # self.fds.kill_thread_pool() # kill thread pool
+        #self.fds.copy_flag = False
+
+        self.executeButton.setEnabled(True)
+        self.cancelButton.setEnabled(True)
+
         userInfo = QMessageBox.question(self, "Confirmation",
                                         "Clean up destination directory? Warning: Entire directory may be deleted in this process",
                                         QMessageBox.Yes | QMessageBox.No)
@@ -103,6 +117,9 @@ class Window(QWidget):
 
         elif userInfo == QMessageBox.No:
             pass
+
+    def clear_log(self):
+        self.textEdit.clear()
 
     def getSeletedFile(self, init_text):
         path = QFileDialog.getExistingDirectory()
@@ -127,9 +144,9 @@ class Window(QWidget):
             eval("self." + init_text + "FilePath").setText(",".join(self.source))
             print(self.source)
 
-
-app = QApplication(sys.argv)
-window = Window()
-window.show()
-app.exec_()
-sys.exit(0)
+if __name__=="__main__":
+    app = QApplication(sys.argv)
+    window = Window()
+    window.show()
+    app.exec_()
+    sys.exit(0)
