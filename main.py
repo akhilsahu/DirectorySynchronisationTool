@@ -8,7 +8,7 @@ from PySide2.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox, \
 import sys
 
 
-from directorysync.FileSyncProcess import FileSyncProcess
+from directorysync.FileSyncProcesses import FileSyncProcess
 
 
 class Window(QWidget):
